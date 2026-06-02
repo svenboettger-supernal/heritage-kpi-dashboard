@@ -8,8 +8,8 @@ test("empty / root hash returns overview", () => {
   assert.deepEqual(parseHash("#"),      { view: "overview", params: {} });
 });
 
-test("about hash returns about", () => {
-  assert.deepEqual(parseHash("#/about"), { view: "about", params: {} });
+test("removed about hash falls back to overview", () => {
+  assert.deepEqual(parseHash("#/about"), { view: "overview", params: {} });
 });
 
 test("domain hash returns domain with slug param", () => {

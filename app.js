@@ -1,21 +1,18 @@
 // app.js
-// Entry point. Hash router + two dropdowns (sections on this page, all pages).
+// Entry point. Hash router + two dropdowns (Overview = sections on this page, Domains = domain pages).
 // Only place that touches the DOM.
 
 import { parseHash } from "./src/router.js";
 import { OVERVIEW_SECTIONS, renderOverview } from "./src/views/overview.js";
 import { getDomainSections, renderDomain }   from "./src/views/domain.js";
-import { ABOUT_SECTIONS, renderAbout }       from "./src/views/about.js";
 import { getDomain } from "./src/data.js";
 
-const PAGES = [
-  { hash: "#/",                                   label: "Overview" },
-  { hash: "#/domain/insurance-summary",           label: "Insurance summary" },
-  { hash: "#/domain/flow-diagram",                label: "Flow Diagram" },
-  { hash: "#/domain/asset-sheet",                 label: "Asset Sheet" },
-  { hash: "#/domain/data-sheet",                  label: "Data Sheet" },
-  { hash: "#/domain/estate-distribution-chart",   label: "Estate Distribution" },
-  { hash: "#/about",                              label: "Framework legend" },
+const DOMAIN_PAGES = [
+  { hash: "#/domain/insurance-summary",         label: "Insurance summary" },
+  { hash: "#/domain/flow-diagram",              label: "Flow Diagram" },
+  { hash: "#/domain/asset-sheet",               label: "Asset Sheet" },
+  { hash: "#/domain/data-sheet",                label: "Data Sheet" },
+  { hash: "#/domain/estate-distribution-chart", label: "Estate Distribution" },
 ];
 
 function escapeHtml(s) {
@@ -51,24 +48,16 @@ function smoothScrollToId(id) {
 function getCurrentSections(route) {
   if (route.view === "overview") return OVERVIEW_SECTIONS;
   if (route.view === "domain")   return getDomainSections(getDomain(route.params.slug));
-  if (route.view === "about")    return ABOUT_SECTIONS;
   return [];
 }
 
-function currentPageHash(route) {
-  if (route.view === "domain") return `#/domain/${route.params.slug}`;
-  if (route.view === "about")  return "#/about";
-  return "#/";
+function currentDomainHash(route) {
+  return route.view === "domain" ? `#/domain/${route.params.slug}` : null;
 }
 
 function populateSectionsDropdown(sections) {
   const dropdown = document.getElementById("sections-dd");
   const menu = dropdown.querySelector(".dropdown-menu");
-  if (!sections.length) {
-    dropdown.hidden = true;
-    return;
-  }
-  dropdown.hidden = false;
   menu.innerHTML = sections.map(s =>
     `<button type="button" role="menuitem" data-scroll-to="${escapeHtml(s.id)}">${escapeHtml(s.label)}</button>`
   ).join("");
@@ -80,16 +69,11 @@ function populateSectionsDropdown(sections) {
   });
 }
 
-function populatePagesDropdown(currentHash) {
+function populateDomainsDropdown(activeHash) {
   const dropdown = document.getElementById("pages-dd");
-  const toggleLabel = dropdown.querySelector(".dropdown-label");
   const menu = dropdown.querySelector(".dropdown-menu");
-
-  const current = PAGES.find(p => p.hash === currentHash) ?? PAGES[0];
-  toggleLabel.textContent = current.label;
-
-  menu.innerHTML = PAGES.map(p =>
-    `<a href="${escapeHtml(p.hash)}" role="menuitem"${p.hash === currentHash ? ' class="active" aria-current="page"' : ""}>${escapeHtml(p.label)}</a>`
+  menu.innerHTML = DOMAIN_PAGES.map(p =>
+    `<a href="${escapeHtml(p.hash)}" role="menuitem"${p.hash === activeHash ? ' class="active" aria-current="page"' : ""}>${escapeHtml(p.label)}</a>`
   ).join("");
   menu.querySelectorAll("a").forEach(a => {
     a.addEventListener("click", () => closeDropdown(dropdown));
@@ -102,13 +86,12 @@ function render() {
   let html;
   switch (route.view) {
     case "domain":   html = renderDomain(route.params.slug); break;
-    case "about":    html = renderAbout(); break;
     case "overview":
     default:         html = renderOverview(); break;
   }
   app.innerHTML = html;
   populateSectionsDropdown(getCurrentSections(route));
-  populatePagesDropdown(currentPageHash(route));
+  populateDomainsDropdown(currentDomainHash(route));
   window.scrollTo(0, 0);
 }
 

@@ -123,6 +123,11 @@ a:focus-visible { outline: 2px solid var(--action); outline-offset: 2px; border-
   justify-content: space-between;
   gap: 32px;
 }
+.topbar .brand {
+  text-decoration: none;
+  color: var(--fg);
+}
+.topbar .brand:hover { text-decoration: none; color: var(--fg); }
 .topbar .brand h1 {
   font-family: "Lora", serif;
   font-size: 18px;

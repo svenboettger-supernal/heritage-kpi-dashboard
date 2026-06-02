@@ -14,9 +14,6 @@ export function parseHash(hash) {
   if (trimmed === "" || trimmed === "/") {
     return { view: "overview", params: {} };
   }
-  if (trimmed === "about") {
-    return { view: "about", params: {} };
-  }
   const m = /^domain\/(.+)$/.exec(trimmed);
   if (m && DOMAIN_SLUGS.has(m[1])) {
     return { view: "domain", params: { slug: m[1] } };
