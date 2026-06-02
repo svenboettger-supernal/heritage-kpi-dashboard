@@ -1,25 +1,14 @@
 // app.js
-// Entry point. Hash router + two dropdowns (Overview = sections on this page, Domains = domain pages).
+// Entry point. Hash router + two fixed dropdowns (Overview sections / Domain pages).
 // Only place that touches the DOM.
 
 import { parseHash } from "./src/router.js";
-import { OVERVIEW_SECTIONS, renderOverview } from "./src/views/overview.js";
-import { getDomainSections, renderDomain }   from "./src/views/domain.js";
-import { getDomain } from "./src/data.js";
+import { renderOverview } from "./src/views/overview.js";
+import { renderDomain }   from "./src/views/domain.js";
 
-const DOMAIN_PAGES = [
-  { hash: "#/domain/insurance-summary",         label: "Insurance summary" },
-  { hash: "#/domain/flow-diagram",              label: "Flow Diagram" },
-  { hash: "#/domain/asset-sheet",               label: "Asset Sheet" },
-  { hash: "#/domain/data-sheet",                label: "Data Sheet" },
-  { hash: "#/domain/estate-distribution-chart", label: "Estate Distribution" },
-];
-
-function escapeHtml(s) {
-  return String(s).replace(/[&<>"']/g, c => ({
-    "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;",
-  }[c]));
-}
+// Cross-page scroll: when the user clicks an Overview section from another page,
+// we navigate to "#/" and then scroll to this section once the overview has rendered.
+let pendingScrollTarget = null;
 
 function closeDropdown(dropdown) {
   dropdown.classList.remove("open");
@@ -45,38 +34,43 @@ function smoothScrollToId(id) {
   window.scrollTo({ top, behavior: "smooth" });
 }
 
-function getCurrentSections(route) {
-  if (route.view === "overview") return OVERVIEW_SECTIONS;
-  if (route.view === "domain")   return getDomainSections(getDomain(route.params.slug));
-  return [];
-}
-
-function currentDomainHash(route) {
-  return route.view === "domain" ? `#/domain/${route.params.slug}` : null;
-}
-
-function populateSectionsDropdown(sections) {
-  const dropdown = document.getElementById("sections-dd");
-  const menu = dropdown.querySelector(".dropdown-menu");
-  menu.innerHTML = sections.map(s =>
-    `<button type="button" role="menuitem" data-scroll-to="${escapeHtml(s.id)}">${escapeHtml(s.label)}</button>`
-  ).join("");
-  menu.querySelectorAll("button[data-scroll-to]").forEach(btn => {
+function wireOverviewMenu() {
+  const dropdown = document.getElementById("overview-dd");
+  dropdown.querySelectorAll("button[data-section]").forEach(btn => {
     btn.addEventListener("click", () => {
-      smoothScrollToId(btn.getAttribute("data-scroll-to"));
+      const sectionId = btn.getAttribute("data-section");
+      const route = parseHash(window.location.hash);
+      if (route.view === "overview") {
+        smoothScrollToId(sectionId);
+      } else {
+        pendingScrollTarget = sectionId;
+        window.location.hash = "#/";
+      }
       closeDropdown(dropdown);
     });
   });
 }
 
-function populateDomainsDropdown(activeHash) {
-  const dropdown = document.getElementById("pages-dd");
-  const menu = dropdown.querySelector(".dropdown-menu");
-  menu.innerHTML = DOMAIN_PAGES.map(p =>
-    `<a href="${escapeHtml(p.hash)}" role="menuitem"${p.hash === activeHash ? ' class="active" aria-current="page"' : ""}>${escapeHtml(p.label)}</a>`
-  ).join("");
-  menu.querySelectorAll("a").forEach(a => {
+function wireDomainsMenu() {
+  const dropdown = document.getElementById("domains-dd");
+  dropdown.querySelectorAll("a[href]").forEach(a => {
     a.addEventListener("click", () => closeDropdown(dropdown));
+  });
+}
+
+function initShell() {
+  document.querySelectorAll(".dropdown").forEach(initDropdownToggle);
+  wireOverviewMenu();
+  wireDomainsMenu();
+  document.addEventListener("click", (e) => {
+    document.querySelectorAll(".dropdown.open").forEach(d => {
+      if (!d.contains(e.target)) closeDropdown(d);
+    });
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      document.querySelectorAll(".dropdown.open").forEach(closeDropdown);
+    }
   });
 }
 
@@ -90,27 +84,18 @@ function render() {
     default:         html = renderOverview(); break;
   }
   app.innerHTML = html;
-  populateSectionsDropdown(getCurrentSections(route));
-  populateDomainsDropdown(currentDomainHash(route));
-  window.scrollTo(0, 0);
-}
 
-function initShellDropdowns() {
-  document.querySelectorAll(".dropdown").forEach(initDropdownToggle);
-  document.addEventListener("click", (e) => {
-    document.querySelectorAll(".dropdown.open").forEach(d => {
-      if (!d.contains(e.target)) closeDropdown(d);
-    });
-  });
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") {
-      document.querySelectorAll(".dropdown.open").forEach(closeDropdown);
-    }
-  });
+  if (pendingScrollTarget && route.view === "overview") {
+    const target = pendingScrollTarget;
+    pendingScrollTarget = null;
+    requestAnimationFrame(() => smoothScrollToId(target));
+  } else {
+    window.scrollTo(0, 0);
+  }
 }
 
 window.addEventListener("hashchange", render);
 window.addEventListener("DOMContentLoaded", () => {
-  initShellDropdowns();
+  initShell();
   render();
 });

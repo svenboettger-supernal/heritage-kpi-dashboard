@@ -15,20 +15,32 @@
         <div class="brand-sub">Accuracy KPI Framework</div>
       </a>
       <nav class="topnav" aria-label="Primary">
-        <div class="dropdown" id="sections-dd">
+        <div class="dropdown" id="overview-dd">
           <button class="dropdown-toggle" type="button" aria-haspopup="menu" aria-expanded="false">
-            <span class="dropdown-label">Overview</span>
+            Overview
             <svg class="caret" width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M2 4 L5 7 L8 4" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </button>
-          <div class="dropdown-menu" role="menu"></div>
+          <div class="dropdown-menu" role="menu">
+            <button type="button" role="menuitem" data-section="section-accuracy">Accuracy</button>
+            <button type="button" role="menuitem" data-section="section-accuracy-trend">Accuracy trend</button>
+            <button type="button" role="menuitem" data-section="section-timing">Timing</button>
+            <button type="button" role="menuitem" data-section="section-timing-trend">Timing trend</button>
+            <button type="button" role="menuitem" data-section="section-per-domain">Per domain and top reviewers</button>
+          </div>
         </div>
 
-        <div class="dropdown" id="pages-dd">
+        <div class="dropdown" id="domains-dd">
           <button class="dropdown-toggle" type="button" aria-haspopup="menu" aria-expanded="false">
-            <span class="dropdown-label">Domains</span>
+            Domains
             <svg class="caret" width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M2 4 L5 7 L8 4" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </button>
-          <div class="dropdown-menu" role="menu"></div>
+          <div class="dropdown-menu" role="menu">
+            <a href="#/domain/insurance-summary"        role="menuitem">Insurance summary</a>
+            <a href="#/domain/flow-diagram"             role="menuitem">Flow Diagram</a>
+            <a href="#/domain/asset-sheet"              role="menuitem">Asset Sheet</a>
+            <a href="#/domain/data-sheet"               role="menuitem">Data Sheet</a>
+            <a href="#/domain/estate-distribution-chart" role="menuitem">Estate Distribution</a>
+          </div>
         </div>
       </nav>
     </div>

@@ -1,18 +1,4 @@
 // src/views/domain.js
-// Section list is per-domain because Stage 1 is hidden on EDS.
-export function getDomainSections(domain) {
-  const out = [
-    { id: "section-summary",        label: "Summary" },
-    { id: "section-accuracy-trend", label: "Accuracy trend" },
-    { id: "section-timing-trend",   label: "Timing trend" },
-  ];
-  if (domain && domain.stage1Applies) {
-    out.push({ id: "section-stage-1", label: "Stage 1 detail" });
-  }
-  out.push({ id: "section-stage-2", label: "Stage 2 detail" });
-  return out;
-}
-
 import { pct, seconds } from "../format.js";
 import { trendLine, secondsAxisFormatter } from "../charts/trend-line.js";
 import { barSeries } from "../charts/bar-series.js";

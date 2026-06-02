@@ -1,12 +1,4 @@
 // src/views/overview.js
-export const OVERVIEW_SECTIONS = [
-  { id: "section-accuracy",       label: "Accuracy" },
-  { id: "section-accuracy-trend", label: "Accuracy trend" },
-  { id: "section-timing",         label: "Timing" },
-  { id: "section-timing-trend",   label: "Timing trend" },
-  { id: "section-per-domain",     label: "Per domain" },
-];
-
 import { pct, seconds, delta } from "../format.js";
 import { sparkline } from "../charts/sparkline.js";
 import { trendLine, secondsAxisFormatter } from "../charts/trend-line.js";
