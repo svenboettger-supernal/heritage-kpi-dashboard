@@ -15,20 +15,14 @@
         <div class="brand-sub">Accuracy KPI Framework</div>
       </div>
       <nav class="topnav" aria-label="Primary">
-        <a href="#/" class="topnav-link" data-nav="overview">Overview</a>
+        <a href="#/" class="topnav-link" id="overview-link" hidden>Overview</a>
 
-        <div class="dropdown" id="sections-dropdown" hidden>
-          <button class="dropdown-toggle" type="button" aria-haspopup="menu" aria-expanded="false">
-            Sections
-            <svg class="caret" width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M2 4 L5 7 L8 4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </button>
-          <div class="dropdown-menu" role="menu">
-            <button type="button" role="menuitem" data-scroll-to="section-accuracy">Accuracy</button>
-            <button type="button" role="menuitem" data-scroll-to="section-accuracy-trend">Accuracy trend</button>
-            <button type="button" role="menuitem" data-scroll-to="section-timing">Timing</button>
-            <button type="button" role="menuitem" data-scroll-to="section-timing-trend">Timing trend</button>
-            <button type="button" role="menuitem" data-scroll-to="section-per-domain">Per domain</button>
-          </div>
+        <div class="section-pills" id="section-pills" role="tablist" aria-label="Overview sections" hidden>
+          <button type="button" class="section-pill" data-scroll-to="section-accuracy"       role="tab">Accuracy</button>
+          <button type="button" class="section-pill" data-scroll-to="section-accuracy-trend" role="tab">Accuracy trend</button>
+          <button type="button" class="section-pill" data-scroll-to="section-timing"         role="tab">Timing</button>
+          <button type="button" class="section-pill" data-scroll-to="section-timing-trend"   role="tab">Timing trend</button>
+          <button type="button" class="section-pill" data-scroll-to="section-per-domain"     role="tab">Per domain</button>
         </div>
 
         <div class="dropdown" id="domains-dropdown">
