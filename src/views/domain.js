@@ -43,7 +43,7 @@ function renderPlacementRow(p) {
 }
 
 function barSeriesByScore(rows, vizIndex) {
-  return barSeries(rows.map(r => ({
+  return barSeries(rows.filter(r => r.n !== 0).map(r => ({
     label: r.name,
     value: r.score,
     displayValue: pct(r.score),

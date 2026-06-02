@@ -443,6 +443,13 @@ a:focus-visible { outline: 2px solid var(--action); outline-offset: 2px; border-
   margin: 8px 0 24px;
 }
 
+/* ---------- Matrix keyboard nav ---------- */
+.matrix tbody tr:focus-visible {
+  outline: 2px solid var(--action);
+  outline-offset: -2px;
+}
+.matrix tbody tr:focus { outline: none; } /* suppress non-keyboard focus rings */
+
 /* footer */
 .footer {
   margin-top: 80px;

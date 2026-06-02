@@ -52,7 +52,7 @@ function matrixRow(d, outliersByDomain) {
   const revChip = revOutlier ? ` <span class="chip-warn">⚠</span>` : "";
 
   return `
-    <tr onclick="window.location.hash = '#/domain/${d.slug}'">
+    <tr tabindex="0" role="link" aria-label="Open ${d.name} details" onclick="window.location.hash = '#/domain/${d.slug}'" onkeydown="if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); window.location.hash = '#/domain/${d.slug}'; }">
       <td>
         <span class="domain-cell">
           <span class="domain-dot" style="${dotStyle}"></span>
