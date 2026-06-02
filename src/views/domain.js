@@ -1,6 +1,5 @@
 // src/views/domain.js
 import { pct, seconds } from "../format.js";
-import { sparkline } from "../charts/sparkline.js";
 import { trendLine } from "../charts/trend-line.js";
 import { barSeries } from "../charts/bar-series.js";
 import { getDomain, getWeeks } from "../data.js";
@@ -48,7 +47,7 @@ function barSeriesByScore(rows, vizIndex) {
     label: r.name,
     value: r.score,
     displayValue: pct(r.score),
-    secondary: `n=${r.n}`,
+    secondary: r.n === "" || r.n === undefined || r.n === null ? undefined : `n=${r.n}`,
     tint: vizTintVar(vizIndex),
     stroke: vizVar(vizIndex),
   })));
