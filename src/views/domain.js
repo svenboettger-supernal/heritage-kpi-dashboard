@@ -190,7 +190,7 @@ export function renderDomain(slug) {
         </div>
       </div>
       <div class="domain-stats-group">
-        <h5 class="section-title section-title-first">Timing · per document</h5>
+        <h5 class="section-title section-title-first">Timing</h5>
         <div class="stats-row stats-row-timing">
           ${stageTimingDetail("Stage 1 · Answer", d.timing.stage1)}
           ${stageTimingDetail("Stage 2 · Mapping", d.timing.stage2)}

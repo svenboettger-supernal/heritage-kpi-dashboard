@@ -134,7 +134,7 @@ export function renderOverview() {
       })}
     </div>
 
-    <h5 class="section-title">Timing · per document</h5>
+    <h5 class="section-title">Timing</h5>
     <p class="section-caption">AI processing and reviewer time are additive phases of the pipeline. Both should fall: AI gets faster; reviewer time shrinks as accuracy and trust grow.</p>
     <section class="timing-cards">
       ${stageTimingCard("Stage 1 · Answer", r.timing.stage1)}
@@ -177,7 +177,7 @@ export function renderOverview() {
         <tr class="matrix-group">
           <th></th>
           <th colspan="2" class="group-accuracy">Accuracy</th>
-          <th colspan="2" class="group-timing">Timing — per document</th>
+          <th colspan="2" class="group-timing">Timing</th>
         </tr>
         <tr>
           <th>Domain</th>
