@@ -8,18 +8,32 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <main class="page">
-    <header class="topbar">
+  <header class="topbar topbar-sticky">
+    <div class="topbar-inner">
       <div class="brand">
-        <span style="color: var(--viz-0); display: inline-flex;"><img src="assets/heritage-mark.svg" alt="" width="24" height="24" style="opacity: 0.85"></span>
-        <div>
-          <h1 style="font-size: 22px; line-height: 1;">Heritage</h1>
-          <div class="brand-sub">Accuracy KPI Framework</div>
-        </div>
+        <h1>Heritage</h1>
+        <div class="brand-sub">Accuracy KPI Framework</div>
       </div>
-      <span class="stamp" id="stamp">v1 demo · 2026-06-02</span>
-    </header>
+      <nav class="topnav" aria-label="Primary">
+        <a href="#/" class="topnav-link" data-nav="overview">Overview</a>
+        <div class="dropdown" id="domains-dropdown">
+          <button class="dropdown-toggle" type="button" aria-haspopup="menu" aria-expanded="false" data-nav="domains">
+            Domains <span class="caret" aria-hidden="true">▾</span>
+          </button>
+          <div class="dropdown-menu" role="menu">
+            <a href="#/domain/insurance-summary"        role="menuitem" data-domain="insurance-summary">Insurance summary</a>
+            <a href="#/domain/flow-diagram"             role="menuitem" data-domain="flow-diagram">Flow Diagram</a>
+            <a href="#/domain/asset-sheet"              role="menuitem" data-domain="asset-sheet">Asset Sheet</a>
+            <a href="#/domain/data-sheet"               role="menuitem" data-domain="data-sheet">Data Sheet</a>
+            <a href="#/domain/estate-distribution-chart" role="menuitem" data-domain="estate-distribution-chart">Estate Distribution</a>
+          </div>
+        </div>
+        <a href="#/about" class="topnav-link" data-nav="about">Framework legend</a>
+      </nav>
+    </div>
+  </header>
 
+  <main class="page">
     <div id="app"></div>
 
     <footer class="footer">

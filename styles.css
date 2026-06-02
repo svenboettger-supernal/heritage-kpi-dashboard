@@ -103,30 +103,130 @@ a:focus-visible { outline: 2px solid var(--action); outline-offset: 2px; border-
 .page {
   max-width: var(--content-max);
   margin: 0 auto;
-  padding: var(--pad-page-y) var(--pad-page-x);
+  padding: 32px var(--pad-page-x) var(--pad-page-y);
 }
 
-.topbar {
+/* Sticky top bar — spans full window width; inner content respects content-max */
+.topbar-sticky {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--bg-page);
+  border-bottom: 1px solid var(--border);
+}
+.topbar-inner {
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: 14px var(--pad-page-x);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 48px;
+  gap: 32px;
 }
-.topbar .brand {
-  display: flex; align-items: center; gap: 12px;
-  color: var(--fg);
+.topbar .brand h1 {
+  font-family: "Lora", serif;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  margin: 0 0 2px;
 }
-.topbar .brand h1 { font-size: 22px; }
 .topbar .brand-sub {
-  font-size: 12px;
+  font-size: 11px;
   color: var(--fg-muted);
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
-.topbar .stamp {
-  font-size: 12px;
-  color: var(--fg-muted);
-  font-family: "JetBrains Mono", monospace;
+
+/* Primary nav */
+.topnav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.topnav-link {
+  color: var(--fg);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 8px 14px;
+  border-radius: var(--radius-pill);
+  text-decoration: none;
+}
+.topnav-link:hover {
+  background: var(--action-subtle);
+  color: var(--action-hover);
+  text-decoration: none;
+}
+.topnav-link.active,
+.dropdown-toggle.active {
+  background: var(--action);
+  color: var(--action-fg);
+}
+.topnav-link.active:hover,
+.dropdown-toggle.active:hover {
+  background: var(--action-hover);
+  color: var(--action-fg);
+}
+
+/* Domain dropdown */
+.dropdown { position: relative; }
+.dropdown-toggle {
+  background: transparent;
+  border: none;
+  color: var(--fg);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 8px 14px;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.dropdown-toggle:hover {
+  background: var(--action-subtle);
+  color: var(--action-hover);
+}
+.dropdown-toggle .caret {
+  font-size: 10px;
+  display: inline-block;
+  transition: transform 120ms ease;
+  line-height: 1;
+}
+.dropdown.open .dropdown-toggle .caret {
+  transform: rotate(180deg);
+}
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 240px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  padding: 6px;
+  display: none;
+}
+.dropdown.open .dropdown-menu { display: block; }
+.dropdown-menu a {
+  display: block;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  color: var(--fg);
+  text-decoration: none;
+}
+.dropdown-menu a:hover {
+  background: var(--action-subtle);
+  color: var(--action-hover);
+  text-decoration: none;
+}
+.dropdown-menu a.active {
+  background: var(--action-subtle);
+  color: var(--action-hover);
+  font-weight: 500;
 }
 
 .back-link {
@@ -147,7 +247,9 @@ a:focus-visible { outline: 2px solid var(--action); outline-offset: 2px; border-
 
 @media (max-width: 720px) {
   :root { --pad-page-x: 24px; --pad-page-y: 40px; }
-  .topbar { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .topbar-inner { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .topnav { flex-wrap: wrap; }
+  .dropdown-menu { right: auto; left: 0; }
 }
 
 /* ---------- Hero rollups ---------- */
@@ -330,8 +432,19 @@ a:focus-visible { outline: 2px solid var(--action); outline-offset: 2px; border-
   color: var(--fg-muted);
   margin-bottom: 8px;
 }
-.timing-trend-grid { gap: 24px; }
-.timing-trend-grid .trend-card { padding: 20px 24px; }
+.timing-trend-grid { gap: 24px; align-items: stretch; }
+.timing-trend-grid .trend-card {
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  min-height: 280px;
+}
+.timing-trend-grid .trend-card svg {
+  flex: 1 1 auto;
+  width: 100%;
+  height: auto;
+  min-height: 0;
+}
 
 /* Section caption — sits under a section-title to explain the section */
 .section-caption {
@@ -560,6 +673,7 @@ a:focus-visible { outline: 2px solid var(--action); outline-offset: 2px; border-
   padding: 0 12px 10px;
   border-bottom: 1px solid var(--border);
 }
+.detail-table thead th.num { text-align: right; }
 .detail-table tbody td {
   padding: 12px;
   border-bottom: 1px solid var(--border);
