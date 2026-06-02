@@ -1,4 +1,18 @@
 // src/views/domain.js
+// Section list is per-domain because Stage 1 is hidden on EDS.
+export function getDomainSections(domain) {
+  const out = [
+    { id: "section-summary",        label: "Summary" },
+    { id: "section-accuracy-trend", label: "Accuracy trend" },
+    { id: "section-timing-trend",   label: "Timing trend" },
+  ];
+  if (domain && domain.stage1Applies) {
+    out.push({ id: "section-stage-1", label: "Stage 1 detail" });
+  }
+  out.push({ id: "section-stage-2", label: "Stage 2 detail" });
+  return out;
+}
+
 import { pct, seconds } from "../format.js";
 import { trendLine, secondsAxisFormatter } from "../charts/trend-line.js";
 import { barSeries } from "../charts/bar-series.js";
@@ -56,7 +70,7 @@ function barSeriesByScore(rows, vizIndex) {
 function stage1Section(d) {
   if (!d.stage1Applies) return "";
   return `
-    <section class="detail-section">
+    <section class="detail-section" id="section-stage-1">
       <h3>Stage 1 · Answer accuracy</h3>
       <h5 class="section-title" style="margin-top: 24px;">Per question</h5>
       <table class="detail-table">
@@ -79,7 +93,7 @@ function stage1Section(d) {
 
 function stage2Section(d) {
   return `
-    <section class="detail-section">
+    <section class="detail-section" id="section-stage-2">
       <h3>Stage 2 · Mapping accuracy</h3>
       <h5 class="section-title" style="margin-top: 24px;">Per placement type</h5>
       <table class="detail-table">
@@ -175,7 +189,7 @@ export function renderDomain(slug) {
       <h2>${d.name}</h2>
     </header>
 
-    <div class="domain-stats">
+    <div class="domain-stats" id="section-summary">
       <div class="domain-stats-group">
         <h5 class="section-title section-title-first">Accuracy</h5>
         <div class="stats-row">
@@ -198,7 +212,7 @@ export function renderDomain(slug) {
       </div>
     </div>
 
-    <h5 class="section-title">Accuracy trend · last 12 weeks</h5>
+    <h5 class="section-title" id="section-accuracy-trend">Accuracy trend · last 12 weeks</h5>
     <div class="card trend-card">
       ${trendLine({
         weeks,
@@ -207,7 +221,7 @@ export function renderDomain(slug) {
       })}
     </div>
 
-    <h5 class="section-title">Timing trend · last 12 weeks</h5>
+    <h5 class="section-title" id="section-timing-trend">Timing trend · last 12 weeks</h5>
     <div class="two-col timing-trend-grid">
       ${d.stage1Applies ? timingTrendCard("Stage 1 · Answer", d.timing.stage1) : ""}
       ${timingTrendCard("Stage 2 · Mapping", d.timing.stage2)}

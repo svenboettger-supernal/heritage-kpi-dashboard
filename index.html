@@ -15,28 +15,20 @@
         <div class="brand-sub">Accuracy KPI Framework</div>
       </div>
       <nav class="topnav" aria-label="Primary">
-        <a href="#/" class="topnav-link" id="overview-link" hidden>Overview</a>
-
-        <div class="section-pills" id="section-pills" role="tablist" aria-label="Overview sections" hidden>
-          <button type="button" class="section-pill" data-scroll-to="section-accuracy"       role="tab">Accuracy</button>
-          <button type="button" class="section-pill" data-scroll-to="section-accuracy-trend" role="tab">Accuracy trend</button>
-          <button type="button" class="section-pill" data-scroll-to="section-timing"         role="tab">Timing</button>
-          <button type="button" class="section-pill" data-scroll-to="section-timing-trend"   role="tab">Timing trend</button>
-          <button type="button" class="section-pill" data-scroll-to="section-per-domain"     role="tab">Per domain</button>
-        </div>
-
-        <div class="dropdown" id="domains-dropdown">
-          <button class="dropdown-toggle" type="button" aria-haspopup="menu" aria-expanded="false" data-nav="domains">
-            Domains
+        <div class="dropdown" id="sections-dd">
+          <button class="dropdown-toggle" type="button" aria-haspopup="menu" aria-expanded="false">
+            <span class="dropdown-label">On this page</span>
             <svg class="caret" width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M2 4 L5 7 L8 4" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </button>
-          <div class="dropdown-menu" role="menu">
-            <a href="#/domain/insurance-summary"        role="menuitem" data-domain="insurance-summary">Insurance summary</a>
-            <a href="#/domain/flow-diagram"             role="menuitem" data-domain="flow-diagram">Flow Diagram</a>
-            <a href="#/domain/asset-sheet"              role="menuitem" data-domain="asset-sheet">Asset Sheet</a>
-            <a href="#/domain/data-sheet"               role="menuitem" data-domain="data-sheet">Data Sheet</a>
-            <a href="#/domain/estate-distribution-chart" role="menuitem" data-domain="estate-distribution-chart">Estate Distribution</a>
-          </div>
+          <div class="dropdown-menu" role="menu"></div>
+        </div>
+
+        <div class="dropdown" id="pages-dd">
+          <button class="dropdown-toggle" type="button" aria-haspopup="menu" aria-expanded="false">
+            <span class="dropdown-label">Pages</span>
+            <svg class="caret" width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M2 4 L5 7 L8 4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="dropdown-menu" role="menu"></div>
         </div>
       </nav>
     </div>

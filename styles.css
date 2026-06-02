@@ -166,39 +166,7 @@ a:focus-visible { outline: 2px solid var(--action); outline-offset: 2px; border-
   color: var(--action-fg);
 }
 
-/* Segmented section nav — shown only on the Overview page */
-.section-pills {
-  display: inline-flex;
-  align-items: stretch;
-  gap: 2px;
-  background: var(--muted-bg);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-pill);
-  padding: 3px;
-}
-.section-pill {
-  background: transparent;
-  border: none;
-  color: var(--fg-muted);
-  font-family: inherit;
-  font-size: 12px;
-  font-weight: 500;
-  padding: 6px 14px;
-  border-radius: var(--radius-pill);
-  cursor: pointer;
-  white-space: nowrap;
-  transition: background 140ms ease, color 140ms ease;
-}
-.section-pill:hover { color: var(--fg); }
-.section-pill.active {
-  background: var(--action);
-  color: var(--action-fg);
-}
-.section-pill.active:hover { background: var(--action-hover); }
-.section-pill:focus-visible {
-  outline: 2px solid var(--action);
-  outline-offset: 2px;
-}
+.dropdown-label { display: inline-block; }
 
 /* Domain dropdown */
 .dropdown { position: relative; }
