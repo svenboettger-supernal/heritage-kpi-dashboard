@@ -61,8 +61,8 @@ function matrixRow(d, outliersByDomain) {
       </td>
       <td>${s1cell}</td>
       <td>${s2cell}</td>
-      <td class="timing-cell ${aiClass}">AI ${seconds(d.timing.aiSeconds)}${aiChip}</td>
-      <td class="timing-cell ${revClass}">Rev ${seconds(d.timing.reviewerSeconds).replace(/(\d+)m \d+s/, "$1m")}${revChip}</td>
+      <td class="timing-cell ${aiClass}">${seconds(d.timing.aiSeconds)}${aiChip}</td>
+      <td class="timing-cell ${revClass}">${seconds(d.timing.reviewerSeconds).replace(/(\d+)m \d+s/, "$1m")}${revChip}</td>
     </tr>`;
 }
 
@@ -86,26 +86,33 @@ export function renderOverview() {
   const docTypeMax  = Math.max(...docTypes.map(d => d.docs));
 
   return `
+    <h5 class="section-title section-title-first">Accuracy</h5>
     <section class="hero-rollups">
       ${rollupCard("Stage 1", "Answer accuracy — quality of the inputs",  r.stage1.score, r.stage1.trend, delta(r.stage1.score, s1Eight))}
       ${rollupCard("Stage 2", "Mapping accuracy — the end-to-end number", r.stage2.score, r.stage2.trend, delta(r.stage2.score, s2Eight))}
     </section>
 
+    <h5 class="section-title">Timing</h5>
     <section class="timing-strip">
-      <div class="item"><span class="k">AI · per document</span><span class="v">${seconds(r.timing.aiSecondsPerDoc)}</span></div>
-      <div class="item"><span class="k">Reviewer · per document</span><span class="v">${seconds(r.timing.reviewerSecondsPerDoc)}</span></div>
-      <div class="item"><span class="k">Lift</span><span class="v">${r.timing.liftMultiplier.toFixed(1)}×</span></div>
+      <div class="item"><span class="k">AI processing</span><span class="v">${seconds(r.timing.aiSecondsPerDoc)}</span></div>
+      <div class="item"><span class="k">Reviewer time</span><span class="v">${seconds(r.timing.reviewerSecondsPerDoc)}</span></div>
+      <div class="item"><span class="k">Speed-up</span><span class="v">${r.timing.liftMultiplier.toFixed(1)}×</span></div>
     </section>
 
-    <h5 class="section-title">Domain × Stage matrix</h5>
+    <h5 class="section-title">Per domain</h5>
     <table class="matrix">
       <thead>
+        <tr class="matrix-group">
+          <th></th>
+          <th colspan="2" class="group-accuracy">Accuracy</th>
+          <th colspan="2" class="group-timing">Timing</th>
+        </tr>
         <tr>
           <th>Domain</th>
           <th>Stage 1 · Answer</th>
           <th>Stage 2 · Mapping</th>
-          <th>AI / doc</th>
-          <th>Reviewer / doc</th>
+          <th>AI time</th>
+          <th>Reviewer time</th>
         </tr>
       </thead>
       <tbody>

@@ -22,7 +22,7 @@ function renderQuestionRow(q) {
     const count = q.editCategories[cat.key] || 0;
     if (count === 0) return "";
     const pctOfTotal = (count / total * 100).toFixed(0);
-    return `<span class="edit-cat"><span class="swatch" style="background: var(--viz-${cat.vizIndex}-tint); border: 1px solid var(--viz-${cat.vizIndex});"></span>${cat.label} ${pctOfTotal}%</span>`;
+    return `<span class="edit-cat"><span class="swatch" style="background: var(--viz-${cat.vizIndex});"></span>${cat.label} ${pctOfTotal}%</span>`;
   }).join("");
   return `
     <tr>
@@ -60,7 +60,7 @@ function stage1Section(d) {
       <h3>Stage 1 · Answer accuracy</h3>
       <h5 class="section-title" style="margin-top: 24px;">Per question</h5>
       <table class="detail-table">
-        <thead><tr><th>Question</th><th class="num">N</th><th class="num">Mean closeness</th></tr></thead>
+        <thead><tr><th>Question</th><th class="num">N</th><th class="num">Accuracy</th></tr></thead>
         <tbody>${d.stage1.questions.map(renderQuestionRow).join("")}</tbody>
       </table>
 
@@ -83,7 +83,7 @@ function stage2Section(d) {
       <h3>Stage 2 · Mapping accuracy</h3>
       <h5 class="section-title" style="margin-top: 24px;">Per placement type</h5>
       <table class="detail-table">
-        <thead><tr><th>Placement</th><th class="num">N</th><th class="num">Mean closeness</th><th>Common adjustment</th></tr></thead>
+        <thead><tr><th>Placement</th><th class="num">N</th><th class="num">Accuracy</th><th>Common adjustment</th></tr></thead>
         <tbody>${d.stage2.placements.map(renderPlacementRow).join("")}</tbody>
       </table>
 
@@ -132,16 +132,40 @@ export function renderDomain(slug) {
     <a href="#/" class="back-link">← Overview</a>
 
     <header class="domain-header">
-      <div class="id">
-        <span class="big-dot" style="background: ${domainColor}"></span>
-        <h2>${d.name}</h2>
-      </div>
-      ${d.stage1Applies
-        ? `<div class="stage-cell"><div class="label">Stage 1 · Answer</div><div class="num">${pct(d.stage1.score)}</div></div>`
-        : `<div class="stage-cell"><div class="label">Stage 1 · Answer</div><div class="num" style="color: var(--fg-muted)">—</div></div>`}
-      <div class="stage-cell"><div class="label">Stage 2 · Mapping</div><div class="num">${pct(d.stage2.score)}</div></div>
+      <span class="big-dot" style="background: ${domainColor}"></span>
+      <h2>${d.name}</h2>
     </header>
 
+    <div class="domain-stats">
+      <div class="domain-stats-group">
+        <h5 class="section-title section-title-first">Accuracy</h5>
+        <div class="stats-row">
+          <div class="stat">
+            <div class="label">Stage 1 · Answer</div>
+            <div class="num">${d.stage1Applies ? pct(d.stage1.score) : `<span style="color: var(--fg-muted)">—</span>`}</div>
+          </div>
+          <div class="stat">
+            <div class="label">Stage 2 · Mapping</div>
+            <div class="num">${pct(d.stage2.score)}</div>
+          </div>
+        </div>
+      </div>
+      <div class="domain-stats-group">
+        <h5 class="section-title section-title-first">Timing</h5>
+        <div class="stats-row">
+          <div class="stat">
+            <div class="label">AI processing</div>
+            <div class="num">${seconds(d.timing.aiSeconds)}</div>
+          </div>
+          <div class="stat">
+            <div class="label">Reviewer time</div>
+            <div class="num">${seconds(d.timing.reviewerSeconds)}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h5 class="section-title">Trend · last 12 weeks</h5>
     <div class="card trend-card">
       ${trendLine({
         weeks,
@@ -152,13 +176,5 @@ export function renderDomain(slug) {
 
     ${stage1Section(d)}
     ${stage2Section(d)}
-
-    <section class="detail-section">
-      <h3>Pipeline timing</h3>
-      <div class="timing-strip" style="margin-top: 16px;">
-        <div class="item"><span class="k">AI · per document</span><span class="v">${seconds(d.timing.aiSeconds)}</span></div>
-        <div class="item"><span class="k">Reviewer · per document</span><span class="v">${seconds(d.timing.reviewerSeconds)}</span></div>
-      </div>
-    </section>
   `;
 }
