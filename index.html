@@ -16,9 +16,25 @@
       </div>
       <nav class="topnav" aria-label="Primary">
         <a href="#/" class="topnav-link" data-nav="overview">Overview</a>
+
+        <div class="dropdown" id="sections-dropdown" hidden>
+          <button class="dropdown-toggle" type="button" aria-haspopup="menu" aria-expanded="false">
+            Sections
+            <svg class="caret" width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M2 4 L5 7 L8 4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="dropdown-menu" role="menu">
+            <button type="button" role="menuitem" data-scroll-to="section-accuracy">Accuracy</button>
+            <button type="button" role="menuitem" data-scroll-to="section-accuracy-trend">Accuracy trend</button>
+            <button type="button" role="menuitem" data-scroll-to="section-timing">Timing</button>
+            <button type="button" role="menuitem" data-scroll-to="section-timing-trend">Timing trend</button>
+            <button type="button" role="menuitem" data-scroll-to="section-per-domain">Per domain</button>
+          </div>
+        </div>
+
         <div class="dropdown" id="domains-dropdown">
           <button class="dropdown-toggle" type="button" aria-haspopup="menu" aria-expanded="false" data-nav="domains">
-            Domains <span class="caret" aria-hidden="true">▾</span>
+            Domains
+            <svg class="caret" width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M2 4 L5 7 L8 4" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </button>
           <div class="dropdown-menu" role="menu">
             <a href="#/domain/insurance-summary"        role="menuitem" data-domain="insurance-summary">Insurance summary</a>
@@ -28,7 +44,6 @@
             <a href="#/domain/estate-distribution-chart" role="menuitem" data-domain="estate-distribution-chart">Estate Distribution</a>
           </div>
         </div>
-        <a href="#/about" class="topnav-link" data-nav="about">Framework legend</a>
       </nav>
     </div>
   </header>

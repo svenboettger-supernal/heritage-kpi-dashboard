@@ -116,13 +116,13 @@ export function renderOverview() {
   const docTypeMax  = Math.max(...docTypes.map(d => d.docs));
 
   return `
-    <h5 class="section-title section-title-first">Accuracy</h5>
+    <h5 class="section-title section-title-first" id="section-accuracy">Accuracy</h5>
     <section class="hero-rollups">
       ${rollupCard("Stage 1", "Answer accuracy — quality of the inputs",  r.stage1.score, r.stage1.trend, delta(r.stage1.score, s1Eight))}
       ${rollupCard("Stage 2", "Mapping accuracy — the end-to-end number", r.stage2.score, r.stage2.trend, delta(r.stage2.score, s2Eight))}
     </section>
 
-    <h5 class="section-title">Accuracy trend · last 12 weeks</h5>
+    <h5 class="section-title" id="section-accuracy-trend">Accuracy trend · last 12 weeks</h5>
     <div class="card trend-card">
       ${trendLine({
         weeks,
@@ -134,14 +134,14 @@ export function renderOverview() {
       })}
     </div>
 
-    <h5 class="section-title">Timing</h5>
+    <h5 class="section-title" id="section-timing">Timing</h5>
     <p class="section-caption">AI processing and reviewer time are additive phases of the pipeline. Both should fall: AI gets faster; reviewer time shrinks as accuracy and trust grow.</p>
     <section class="timing-cards">
       ${stageTimingCard("Stage 1 · Answer", r.timing.stage1)}
       ${stageTimingCard("Stage 2 · Mapping", r.timing.stage2)}
     </section>
 
-    <h5 class="section-title">Timing trend · last 12 weeks</h5>
+    <h5 class="section-title" id="section-timing-trend">Timing trend · last 12 weeks</h5>
     <div class="two-col timing-trend-grid">
       <div class="card trend-card">
         <div class="trend-card-title">Stage 1 · Answer</div>
@@ -171,7 +171,7 @@ export function renderOverview() {
       </div>
     </div>
 
-    <h5 class="section-title">Per domain</h5>
+    <h5 class="section-title" id="section-per-domain">Per domain</h5>
     <table class="matrix">
       <thead>
         <tr class="matrix-group">

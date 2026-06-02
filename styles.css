@@ -189,10 +189,11 @@ a:focus-visible { outline: 2px solid var(--action); outline-offset: 2px; border-
   color: var(--action-hover);
 }
 .dropdown-toggle .caret {
-  font-size: 10px;
   display: inline-block;
-  transition: transform 120ms ease;
-  line-height: 1;
+  transition: transform 140ms ease;
+  color: currentColor;
+  margin-left: 2px;
+  flex-shrink: 0;
 }
 .dropdown.open .dropdown-toggle .caret {
   transform: rotate(180deg);
@@ -210,15 +211,23 @@ a:focus-visible { outline: 2px solid var(--action); outline-offset: 2px; border-
   display: none;
 }
 .dropdown.open .dropdown-menu { display: block; }
-.dropdown-menu a {
+.dropdown-menu a,
+.dropdown-menu button {
   display: block;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: none;
   padding: 8px 12px;
   border-radius: 6px;
+  font-family: inherit;
   font-size: 14px;
   color: var(--fg);
   text-decoration: none;
+  cursor: pointer;
 }
-.dropdown-menu a:hover {
+.dropdown-menu a:hover,
+.dropdown-menu button:hover {
   background: var(--action-subtle);
   color: var(--action-hover);
   text-decoration: none;
