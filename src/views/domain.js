@@ -1,6 +1,6 @@
 // src/views/domain.js
 import { pct, seconds } from "../format.js";
-import { trendLine } from "../charts/trend-line.js";
+import { trendLine, secondsAxisFormatter } from "../charts/trend-line.js";
 import { barSeries } from "../charts/bar-series.js";
 import { getDomain, getWeeks } from "../data.js";
 
@@ -111,6 +111,45 @@ const VIZ_COLORS = [
   "hsl(64 13% 45%)",   // 4 Olive
 ];
 
+function stageTimingDetail(label, stage) {
+  if (!stage) {
+    return `
+      <div class="stat-stack">
+        <div class="label">${label}</div>
+        <div class="num" style="color: var(--fg-muted)">—</div>
+      </div>`;
+  }
+  const total = stage.aiSeconds + stage.reviewerSeconds;
+  return `
+    <div class="stat-stack">
+      <div class="label">${label}</div>
+      <div class="timing-detail-rows">
+        <div class="row"><span class="k">AI processing</span><span class="v">${seconds(stage.aiSeconds)}</span></div>
+        <div class="row"><span class="k">Reviewer time</span><span class="v">${seconds(stage.reviewerSeconds)}</span></div>
+        <div class="row total"><span class="k">Stage total</span><span class="v">${seconds(total)}</span></div>
+      </div>
+    </div>`;
+}
+
+function timingTrendCard(label, stage) {
+  if (!stage) return "";
+  const yMax = Math.max(...stage.reviewerSecondsTrend) * 1.1;
+  return `
+    <div class="card trend-card">
+      <div class="trend-card-title">${label}</div>
+      ${trendLine({
+        weeks: getWeeks(),
+        series: [
+          { values: stage.aiSecondsTrend,       stroke: "hsl(33 10% 34%)", label: "AI processing" },
+          { values: stage.reviewerSecondsTrend, stroke: "hsl(33 4% 6%)",   label: "Reviewer time" },
+        ],
+        width: 568, height: 200,
+        yMax,
+        yLabelFormat: secondsAxisFormatter,
+      })}
+    </div>`;
+}
+
 export function renderDomain(slug) {
   const d = getDomain(slug);
   if (!d) {
@@ -121,11 +160,11 @@ export function renderDomain(slug) {
 
   const trendSeries = d.stage1Applies
     ? [
-        { values: d.stage2.trend, stroke: domainColor,         label: "Stage 2" },
-        { values: d.stage1.trend, stroke: "hsl(33 10% 34%)",   label: "Stage 1" },
+        { values: d.stage1.trend, stroke: "hsl(33 10% 34%)", label: "Stage 1 · Answer" },
+        { values: d.stage2.trend, stroke: domainColor,        label: "Stage 2 · Mapping" },
       ]
     : [
-        { values: d.stage2.trend, stroke: domainColor,         label: "Stage 2" },
+        { values: d.stage2.trend, stroke: domainColor,        label: "Stage 2 · Mapping" },
       ];
 
   return `
@@ -151,27 +190,27 @@ export function renderDomain(slug) {
         </div>
       </div>
       <div class="domain-stats-group">
-        <h5 class="section-title section-title-first">Timing</h5>
-        <div class="stats-row">
-          <div class="stat">
-            <div class="label">AI processing</div>
-            <div class="num">${seconds(d.timing.aiSeconds)}</div>
-          </div>
-          <div class="stat">
-            <div class="label">Reviewer time</div>
-            <div class="num">${seconds(d.timing.reviewerSeconds)}</div>
-          </div>
+        <h5 class="section-title section-title-first">Timing · per document</h5>
+        <div class="stats-row stats-row-timing">
+          ${stageTimingDetail("Stage 1 · Answer", d.timing.stage1)}
+          ${stageTimingDetail("Stage 2 · Mapping", d.timing.stage2)}
         </div>
       </div>
     </div>
 
-    <h5 class="section-title">Trend · last 12 weeks</h5>
+    <h5 class="section-title">Accuracy trend · last 12 weeks</h5>
     <div class="card trend-card">
       ${trendLine({
         weeks,
         series: trendSeries,
         width: 1136, height: 200,
       })}
+    </div>
+
+    <h5 class="section-title">Timing trend · last 12 weeks</h5>
+    <div class="two-col timing-trend-grid">
+      ${d.stage1Applies ? timingTrendCard("Stage 1 · Answer", d.timing.stage1) : ""}
+      ${timingTrendCard("Stage 2 · Mapping", d.timing.stage2)}
     </div>
 
     ${stage1Section(d)}

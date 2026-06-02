@@ -26,7 +26,7 @@
     { name: "Pour-over",          docs:  9 },
   ];
 
-  // Helper: monotonically-improving trend with mild noise, anchored to a target score.
+  // Helper: monotonically-improving accuracy trend with mild noise, anchored to a target score.
   // Returns an array of 12 values in [0,1] rising toward `target`.
   function trend(start, target) {
     const out = [];
@@ -38,6 +38,32 @@
     }
     out[11] = target;                                   // last value matches headline
     return out;
+  }
+
+  // Helper: timing trend that improves (decreases) over 12 weeks toward `targetSeconds`.
+  // Starts ~35% higher than target. The story: AI is getting faster AND reviewers spend less time
+  // as accuracy + trust improve. Deterministic, no randomness.
+  function timingTrend(targetSeconds) {
+    const out = [];
+    const startSeconds = targetSeconds * 1.35;
+    for (let i = 0; i < 12; i++) {
+      const t = i / 11;
+      const base = startSeconds + (targetSeconds - startSeconds) * t;
+      const noise = (((i * 6151) % 11 - 5) / 100) * targetSeconds; // ±5% deterministic noise
+      out.push(Math.max(targetSeconds * 0.92, base + noise));
+    }
+    out[11] = targetSeconds;
+    return out;
+  }
+
+  // Helper: bundle timing block for a single stage (AI + reviewer seconds + their trends).
+  function stageTiming(aiSeconds, reviewerSeconds) {
+    return {
+      aiSeconds,
+      reviewerSeconds,
+      aiSecondsTrend: timingTrend(aiSeconds),
+      reviewerSecondsTrend: timingTrend(reviewerSeconds),
+    };
   }
 
   const insuranceSummary = {
@@ -99,7 +125,10 @@
         { name: "Remote Legal · L. Park", score: 0.94, n:  23 },
       ],
     },
-    timing: { aiSeconds: 72, reviewerSeconds: 1080 },
+    timing: {
+      stage1: stageTiming(24, 360),
+      stage2: stageTiming(48, 720),
+    },
   };
 
   const flowDiagram = {
@@ -163,7 +192,10 @@
         { name: "Remote Legal · L. Park", score: 0.88, n:  23 },
       ],
     },
-    timing: { aiSeconds: 182, reviewerSeconds: 2460 },
+    timing: {
+      stage1: stageTiming(60, 820),
+      stage2: stageTiming(122, 1640),
+    },
   };
 
   const assetSheet = {
@@ -225,7 +257,10 @@
         { name: "Remote Legal · L. Park", score: 0.94, n:  23 },
       ],
     },
-    timing: { aiSeconds: 124, reviewerSeconds: 1440 },
+    timing: {
+      stage1: stageTiming(42, 480),
+      stage2: stageTiming(82, 960),
+    },
   };
 
   const dataSheet = {
@@ -287,7 +322,10 @@
         { name: "Remote Legal · L. Park", score: 0.97, n:  23 },
       ],
     },
-    timing: { aiSeconds: 58, reviewerSeconds: 960 },
+    timing: {
+      stage1: stageTiming(18, 320),
+      stage2: stageTiming(40, 640),
+    },
   };
 
   const estateDistribution = {
@@ -327,7 +365,10 @@
         { name: "Remote Legal · L. Park", score: 0.83, n:  23 },
       ],
     },
-    timing: { aiSeconds: 151, reviewerSeconds: 1920 },
+    timing: {
+      stage1: null,
+      stage2: stageTiming(151, 1920),
+    },
   };
 
   // Rollup trends are means of the contributing domain trends.
@@ -350,13 +391,35 @@
     estateDistribution.stage2.trend,
   ]);
 
+  // Aggregated timing per stage. Stage 1 averages the 4 domains that apply (EDS skipped).
+  // Stage 2 averages all 5. Trends are means of contributing domain trends.
+  function avg(values) { return values.reduce((a, b) => a + b, 0) / values.length; }
+  const s1Domains = [insuranceSummary, flowDiagram, assetSheet, dataSheet];
+  const s2Domains = [insuranceSummary, flowDiagram, assetSheet, dataSheet, estateDistribution];
+
+  const rollupTimingStage1 = {
+    aiSeconds: Math.round(avg(s1Domains.map(d => d.timing.stage1.aiSeconds))),
+    reviewerSeconds: Math.round(avg(s1Domains.map(d => d.timing.stage1.reviewerSeconds))),
+    aiSecondsTrend: zipMean(s1Domains.map(d => d.timing.stage1.aiSecondsTrend)),
+    reviewerSecondsTrend: zipMean(s1Domains.map(d => d.timing.stage1.reviewerSecondsTrend)),
+  };
+  const rollupTimingStage2 = {
+    aiSeconds: Math.round(avg(s2Domains.map(d => d.timing.stage2.aiSeconds))),
+    reviewerSeconds: Math.round(avg(s2Domains.map(d => d.timing.stage2.reviewerSeconds))),
+    aiSecondsTrend: zipMean(s2Domains.map(d => d.timing.stage2.aiSecondsTrend)),
+    reviewerSecondsTrend: zipMean(s2Domains.map(d => d.timing.stage2.reviewerSecondsTrend)),
+  };
+
   global.HERITAGE_KPI_DATA = {
     generatedAt: "2026-06-02T14:00:00Z",
     weeks: WEEKS,
     rollups: {
       stage1: { score: 0.94, trend: stage1Trend },
       stage2: { score: 0.88, trend: stage2Trend },
-      timing: { aiSecondsPerDoc: 134, reviewerSecondsPerDoc: 1680, liftMultiplier: 12.5 },
+      timing: {
+        stage1: rollupTimingStage1,
+        stage2: rollupTimingStage2,
+      },
     },
     domains: [insuranceSummary, flowDiagram, assetSheet, dataSheet, estateDistribution],
     reviewers,

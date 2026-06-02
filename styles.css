@@ -250,16 +250,13 @@ a:focus-visible { outline: 2px solid var(--action); outline-offset: 2px; border-
   border-bottom: 1px solid var(--border);
 }
 .matrix .matrix-group th {
-  font-family: "Lora", serif;
-  font-weight: 600;
-  font-size: 13px;
-  text-transform: none;
-  letter-spacing: 0;
-  color: var(--fg);
-  padding: 0 16px 6px;
-  border-bottom: 1px solid var(--border-strong);
-}
-.matrix .matrix-group th:first-child {
+  font-family: "Inter", system-ui, sans-serif;
+  font-weight: 500;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+  padding: 0 16px 8px;
   border-bottom: none;
 }
 /* Vertical divider between Accuracy group and Timing group */
@@ -325,6 +322,125 @@ a:focus-visible { outline: 2px solid var(--action); outline-offset: 2px; border-
 /* ---------- Trend chart card ---------- */
 .trend-card { padding: 24px 32px; }
 .trend-card svg { width: 100%; height: auto; }
+.trend-card-title {
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+  margin-bottom: 8px;
+}
+.timing-trend-grid { gap: 24px; }
+.timing-trend-grid .trend-card { padding: 20px 24px; }
+
+/* Section caption — sits under a section-title to explain the section */
+.section-caption {
+  color: var(--fg-muted);
+  font-size: 13px;
+  max-width: 720px;
+  margin: -8px 0 16px;
+  line-height: 1.55;
+}
+
+/* ---------- Timing cards (overview) ---------- */
+.timing-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 40px;
+}
+.timing-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  padding: 24px 28px;
+}
+.timing-card .label-title {
+  font-family: "Lora", serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--fg);
+  margin-bottom: 18px;
+}
+.timing-card .timing-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+.timing-card .stat .label {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+  margin-bottom: 6px;
+}
+.timing-card .stat .num {
+  font-family: "Lora", serif;
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.timing-card .stat .spark { color: var(--fg-muted); }
+.timing-card .timing-total {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.timing-card .timing-total .k {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+}
+.timing-card .timing-total .v {
+  font-family: "Lora", serif;
+  font-size: 18px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+@media (max-width: 900px) {
+  .timing-cards { grid-template-columns: 1fr; }
+}
+
+/* ---------- Domain page · stage timing detail (inside Timing card) ---------- */
+.stats-row-timing {
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+.stat-stack .label {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+  margin-bottom: 8px;
+}
+.stat-stack .timing-detail-rows .row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 4px 0;
+  font-variant-numeric: tabular-nums;
+}
+.stat-stack .timing-detail-rows .row .k {
+  font-size: 13px;
+  color: var(--fg-muted);
+}
+.stat-stack .timing-detail-rows .row .v {
+  font-family: "Lora", serif;
+  font-weight: 600;
+  font-size: 16px;
+}
+.stat-stack .timing-detail-rows .row.total {
+  border-top: 1px solid var(--border);
+  margin-top: 6px;
+  padding-top: 8px;
+}
+.stat-stack .timing-detail-rows .row.total .k { color: var(--fg); font-weight: 500; }
+.stat-stack .timing-detail-rows .row.total .v { font-size: 18px; }
 
 /* ---------- Bar series ---------- */
 .bar-series {

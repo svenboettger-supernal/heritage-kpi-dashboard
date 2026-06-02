@@ -11,12 +11,18 @@ before(() => {
 
 const { getRollups, getDomain, getDomains, getOutliers } = await import("../src/data.js");
 
-test("getRollups returns stage1, stage2, timing", () => {
+test("getRollups returns stage1, stage2, per-stage timing", () => {
   const r = getRollups();
   assert.equal(r.stage1.score, 0.94);
   assert.equal(r.stage2.score, 0.88);
-  assert.equal(r.timing.aiSecondsPerDoc, 134);
   assert.equal(r.stage1.trend.length, 12);
+  // Per-stage timing: AI + Reviewer for each stage, plus trends.
+  assert.ok(r.timing.stage1.aiSeconds > 0);
+  assert.ok(r.timing.stage1.reviewerSeconds > 0);
+  assert.ok(r.timing.stage2.aiSeconds > 0);
+  assert.ok(r.timing.stage2.reviewerSeconds > 0);
+  assert.equal(r.timing.stage1.aiSecondsTrend.length, 12);
+  assert.equal(r.timing.stage2.reviewerSecondsTrend.length, 12);
 });
 
 test("getDomains returns all 5 in canonical order", () => {
@@ -47,17 +53,15 @@ test("EDS has stage1Applies false and stage1 is null", () => {
   assert.equal(eds.stage1, null);
 });
 
-test("getOutliers flags any per-domain timing metric > 30% above pipeline mean", () => {
-  // Flow Diagram aiSeconds        = 182s vs mean 134s = +35.8% → flagged
-  // Flow Diagram reviewerSeconds  = 2460s vs mean 1680s = +46% → flagged
-  // All other domains within range; nothing else flagged.
+test("getOutliers flags any per-domain stage-total time > 30% above rollup mean", () => {
+  // Outliers are computed on stage TOTAL time (AI + Reviewer). The two stages are additive
+  // phases of the pipeline, not a speed-up multiplier.
+  // Flow Diagram has the heaviest review burden in both stages, so both should flag.
   const outliers = getOutliers();
-  assert.equal(outliers.length, 2);
-
-  const fdAi = outliers.find(o => o.domainSlug === "flow-diagram" && o.metric === "aiSeconds");
-  const fdReviewer = outliers.find(o => o.domainSlug === "flow-diagram" && o.metric === "reviewerSeconds");
-  assert.ok(fdAi, "expected Flow Diagram aiSeconds outlier");
-  assert.ok(fdReviewer, "expected Flow Diagram reviewerSeconds outlier");
-  assert.ok(fdAi.deltaRatio > 0.30);
-  assert.ok(fdReviewer.deltaRatio > 0.30);
+  const fd1 = outliers.find(o => o.domainSlug === "flow-diagram" && o.stage === "stage1");
+  const fd2 = outliers.find(o => o.domainSlug === "flow-diagram" && o.stage === "stage2");
+  assert.ok(fd1, "expected Flow Diagram stage 1 timing outlier");
+  assert.ok(fd2, "expected Flow Diagram stage 2 timing outlier");
+  assert.ok(fd1.deltaRatio > 0.30);
+  assert.ok(fd2.deltaRatio > 0.30);
 });
