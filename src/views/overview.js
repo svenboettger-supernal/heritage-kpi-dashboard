@@ -87,8 +87,8 @@ export function renderOverview() {
 
   return `
     <section class="hero-rollups">
-      ${rollupCard("Stage 2", "Mapping accuracy — the end-to-end number", r.stage2.score, r.stage2.trend, delta(r.stage2.score, s2Eight))}
       ${rollupCard("Stage 1", "Answer accuracy — quality of the inputs",  r.stage1.score, r.stage1.trend, delta(r.stage1.score, s1Eight))}
+      ${rollupCard("Stage 2", "Mapping accuracy — the end-to-end number", r.stage2.score, r.stage2.trend, delta(r.stage2.score, s2Eight))}
     </section>
 
     <section class="timing-strip">
