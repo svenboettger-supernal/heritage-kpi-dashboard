@@ -20,12 +20,19 @@ export function getDomain(slug) {
 }
 
 // Returns an array of { domainSlug, metric, value, mean, deltaRatio }
-// for any domain whose reviewer time exceeds (mean × 1.30).
+// for any per-domain timing metric that exceeds (mean × 1.30).
 export function getOutliers() {
   const r = root();
-  const { reviewerSecondsPerDoc } = r.rollups.timing;
+  const { aiSecondsPerDoc, reviewerSecondsPerDoc } = r.rollups.timing;
   const flags = [];
   for (const d of r.domains) {
+    if (d.timing.aiSeconds > aiSecondsPerDoc * 1.30) {
+      flags.push({
+        domainSlug: d.slug, metric: "aiSeconds",
+        value: d.timing.aiSeconds, mean: aiSecondsPerDoc,
+        deltaRatio: d.timing.aiSeconds / aiSecondsPerDoc - 1,
+      });
+    }
     if (d.timing.reviewerSeconds > reviewerSecondsPerDoc * 1.30) {
       flags.push({
         domainSlug: d.slug, metric: "reviewerSeconds",

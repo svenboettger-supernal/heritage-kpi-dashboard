@@ -47,11 +47,17 @@ test("EDS has stage1Applies false and stage1 is null", () => {
   assert.equal(eds.stage1, null);
 });
 
-test("getOutliers flags reviewer time > 30% above mean", () => {
-  // Flow Diagram reviewer = 2460s vs mean 1680s = +46%; flagged.
-  // Others within range; nothing else flagged.
+test("getOutliers flags any per-domain timing metric > 30% above pipeline mean", () => {
+  // Flow Diagram aiSeconds        = 182s vs mean 134s = +35.8% → flagged
+  // Flow Diagram reviewerSeconds  = 2460s vs mean 1680s = +46% → flagged
+  // All other domains within range; nothing else flagged.
   const outliers = getOutliers();
-  assert.equal(outliers.length, 1);
-  assert.equal(outliers[0].domainSlug, "flow-diagram");
-  assert.equal(outliers[0].metric, "reviewerSeconds");
+  assert.equal(outliers.length, 2);
+
+  const fdAi = outliers.find(o => o.domainSlug === "flow-diagram" && o.metric === "aiSeconds");
+  const fdReviewer = outliers.find(o => o.domainSlug === "flow-diagram" && o.metric === "reviewerSeconds");
+  assert.ok(fdAi, "expected Flow Diagram aiSeconds outlier");
+  assert.ok(fdReviewer, "expected Flow Diagram reviewerSeconds outlier");
+  assert.ok(fdAi.deltaRatio > 0.30);
+  assert.ok(fdReviewer.deltaRatio > 0.30);
 });
